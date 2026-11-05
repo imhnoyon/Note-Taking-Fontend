@@ -1,0 +1,154 @@
+/* ==========================================================================
+   NoteTrack SaaS - Responsive Breakpoints & Mobile Drawer (responsive.css)
+   Clean support for Desktop (1920, 1440), Laptop (1366), Tablet (768), Mobile (430, 390, 375)
+   ========================================================================== */
+
+/* Tablet & Smaller Desktop Adjustments (<= 1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 240px;
+  }
+
+  .stat-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .auth-side-brand {
+    padding: 3rem 2.5rem;
+  }
+}
+
+/* Tablet Breakpoint (<= 768px) */
+@media (max-width: 768px) {
+  /* Sidebar Drawer on Mobile/Tablet */
+  .app-sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+
+  .app-sidebar.drawer-open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .app-main {
+    margin-left: 0 !important;
+  }
+
+  .sidebar-toggle-btn {
+    display: flex !important;
+  }
+
+  /* Overlay backdrop when sidebar is open */
+  .sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.5);
+    backdrop-filter: blur(3px);
+    z-index: 999;
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .app-topbar {
+    padding: 0 1rem;
+  }
+
+  .topbar-search {
+    display: none; /* Collapsed on mobile, available via search box in page */
+  }
+
+  .page-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .page-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .page-header-row .btn {
+    width: 100%;
+  }
+
+  .stat-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .notes-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Auth split view collapses on tablets & mobile */
+  .auth-wrapper {
+    flex-direction: column;
+  }
+
+  .auth-side-brand {
+    display: none; /* Mobile focuses on quick login card */
+  }
+
+  .auth-side-form {
+    padding: 1.5rem 1rem;
+    min-height: 100vh;
+  }
+
+  .auth-card {
+    padding: 2rem 1.5rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-bar {
+    width: 100%;
+  }
+
+  .search-box-filter {
+    width: 100%;
+  }
+}
+
+/* Mobile Breakpoints (<= 480px: 430px, 390px, 375px) */
+@media (max-width: 480px) {
+  html {
+    font-size: 14px;
+  }
+
+  h1 { font-size: 1.6rem; }
+  h2 { font-size: 1.35rem; }
+  h3 { font-size: 1.15rem; }
+
+  .page-breadcrumb {
+    display: none;
+  }
+
+  .modal-dialog {
+    margin: 1rem;
+    max-height: 85vh;
+  }
+
+  .modal-header, .modal-body, .modal-footer {
+    padding: 1rem 1.25rem;
+  }
+
+  #toast-container {
+    top: 1rem;
+    right: 5%;
+    width: 90%;
+  }
+
+  .btn {
+    padding: 0.55rem 1rem;
+  }
+}
+

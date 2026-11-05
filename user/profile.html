@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile - NoteTrack</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <style>
+    .profile-card {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .profile-banner {
+      height: 120px;
+      background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+      position: relative;
+    }
+    .profile-avatar-large {
+      width: 84px;
+      height: 84px;
+      border-radius: var(--radius-full);
+      background: var(--bg-surface);
+      border: 4px solid var(--bg-surface);
+      box-shadow: var(--shadow-md);
+      position: absolute;
+      bottom: -42px;
+      left: 2.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .profile-body {
+      padding: 3.5rem 2.25rem 2.25rem;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 600px) {
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .interest-editor {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      background-color: var(--bg-body);
+      min-height: 90px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: flex-start;
+    }
+    .removable-chip {
+      background-color: var(--primary-light);
+      color: var(--primary);
+      padding: 0.3rem 0.75rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .removable-chip button {
+      background: none;
+      border: none;
+      color: var(--primary);
+      cursor: pointer;
+      font-size: 0.85rem;
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+    .removable-chip button:hover {
+      color: var(--danger);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="notes.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>My Notes</span>
+        </a>
+        <a href="create-note.html" class="nav-item">
+          <i class="fa-solid fa-plus"></i>
+          <span>Create Note</span>
+        </a>
+
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-item active">
+          <i class="fa-regular fa-user"></i>
+          <span>My Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar">U</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Loading...</div>
+            <div class="user-role-mini">
+              <span class="badge badge-primary user-role-badge">User</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Home</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>My Profile</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="user-dropdown-menu" aria-label="User menu">
+              <div class="user-avatar">U</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">User</div>
+                <div class="dropdown-user-email user-email-label">user@example.com</div>
+              </div>
+              <a href="profile.html" class="dropdown-item">
+                <i class="fa-regular fa-user"></i> My Profile
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-regular fa-note-sticky"></i> My Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Profile View Body -->
+      <main class="page-content">
+        <div class="page-header-row" style="max-width: 800px; margin-left: auto; margin-right: auto;">
+          <div class="page-title-group">
+            <h1>Account Settings</h1>
+            <p>Manage your personal profile information and topic interests.</p>
+          </div>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-banner">
+            <div class="profile-avatar-large" id="avatar-big">U</div>
+          </div>
+
+          <div class="profile-body">
+            <form id="profile-form" novalidate>
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="username-input">Username</label>
+                  <input type="text" id="username-input" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email-input">Email Address</label>
+                  <input type="email" id="email-input" class="form-control" placeholder="user@example.com">
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="first-name-input">First Name</label>
+                  <input type="text" id="first-name-input" class="form-control" placeholder="e.g., John">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="last-name-input">Last Name</label>
+                  <input type="text" id="last-name-input" class="form-control" placeholder="e.g., Doe">
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label">Role</label>
+                  <input type="text" id="role-input" class="form-control" disabled style="background-color: var(--border-light); cursor: not-allowed;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">User ID</label>
+                  <input type="text" id="userid-input" class="form-control" disabled style="background-color: var(--border-light); cursor: not-allowed; font-family: monospace;">
+                </div>
+              </div>
+
+              <!-- Interests Manager -->
+              <div class="form-group mt-2">
+                <label class="form-label">
+                  <span>Topic Interests</span>
+                  <span class="text-muted" style="font-weight: 400; font-size: 0.78rem;">Track your focus areas</span>
+                </label>
+                <div class="interest-editor" id="interests-container">
+                  <!-- Chips inserted dynamically -->
+                </div>
+                <div class="d-flex align-center gap-2 mt-1">
+                  <input type="text" id="new-interest-input" class="form-control" placeholder="Add a new interest (e.g., Artificial Intelligence, Python)..." style="height: 38px;">
+                  <button type="button" id="btn-add-interest" class="btn btn-secondary btn-sm" style="height: 38px;">
+                    <i class="fa-solid fa-plus"></i> Add
+                  </button>
+                </div>
+              </div>
+
+              <div class="d-flex align-center justify-between mt-3 pt-2" style="border-top: 1px solid var(--border-color);">
+                <button type="button" id="btn-reload-profile" class="btn btn-secondary">
+                  <i class="fa-solid fa-rotate-right"></i> Reset Changes
+                </button>
+                <button type="submit" id="btn-save-profile" class="btn btn-primary btn-lg">
+                  <i class="fa-solid fa-check"></i> Save Profile
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script>
+    let currentInterests = [];
+
+    async function loadProfile() {
+      try {
+        const user = await Auth.refreshProfile() || Auth.getCurrentUser();
+        if (!user) return;
+
+        document.getElementById('username-input').value = user.username || '';
+        document.getElementById('email-input').value = user.email || '';
+        document.getElementById('first-name-input').value = user.first_name || '';
+        document.getElementById('last-name-input').value = user.last_name || '';
+        document.getElementById('role-input').value = user.role || 'user';
+        document.getElementById('userid-input').value = user.id || '--';
+
+        const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ') || user.username;
+        document.getElementById('avatar-big').textContent = UI.getInitials(fullName);
+
+        currentInterests = Array.isArray(user.interests) ? [...user.interests] : [];
+        renderInterests();
+      } catch (err) {
+        UI.showToast(err.message, 'error');
+      }
+    }
+
+    function renderInterests() {
+      const container = document.getElementById('interests-container');
+      container.innerHTML = '';
+
+      if (currentInterests.length === 0) {
+        container.innerHTML = '<span class="text-muted" style="font-size: 0.85rem; padding: 0.25rem;">No interests added yet. Type an interest below and click Add.</span>';
+        return;
+      }
+
+      currentInterests.forEach((interest, index) => {
+        const chip = document.createElement('span');
+        chip.className = 'removable-chip';
+        chip.innerHTML = `
+          <span>${UI.escapeHTML(interest)}</span>
+          <button type="button" data-index="${index}" title="Remove">&times;</button>
+        `;
+        chip.querySelector('button').onclick = () => {
+          currentInterests.splice(index, 1);
+          renderInterests();
+        };
+        container.appendChild(chip);
+      });
+    }
+
+    function addInterest() {
+      const input = document.getElementById('new-interest-input');
+      const val = input.value.trim();
+      if (!val) return;
+      if (currentInterests.includes(val)) {
+        UI.showToast('This interest is already added.', 'warning');
+        return;
+      }
+      currentInterests.push(val);
+      input.value = '';
+      renderInterests();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      loadProfile();
+
+      document.getElementById('btn-add-interest').addEventListener('click', addInterest);
+      document.getElementById('new-interest-input').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          addInterest();
+        }
+      });
+
+      document.getElementById('btn-reload-profile').addEventListener('click', () => {
+        loadProfile();
+        UI.showToast('Profile form reset', 'info');
+      });
+
+      document.getElementById('profile-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const submitBtn = document.getElementById('btn-save-profile');
+        const payload = {
+          username: document.getElementById('username-input').value.trim(),
+          email: document.getElementById('email-input').value.trim(),
+          first_name: document.getElementById('first-name-input').value.trim(),
+          last_name: document.getElementById('last-name-input').value.trim(),
+          interests: currentInterests
+        };
+
+        if (!payload.username) {
+          UI.showToast('Username is required.', 'error');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Saving...';
+
+        try {
+          await Auth.updateProfile(payload);
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Profile';
+          UI.showToast('Profile updated successfully!', 'success');
+          loadProfile();
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Save Profile';
+          UI.showToast(err.message, 'error', 'Update Failed');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

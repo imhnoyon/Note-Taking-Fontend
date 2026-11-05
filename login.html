@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - NoteTrack SaaS</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Brand Feature Sidebar -->
+    <div class="auth-side-brand">
+      <div class="auth-side-content">
+        <div class="brand-badge">
+          <i class="fa-solid fa-lock"></i> Secure REST API Authentication
+        </div>
+        <h1>Elevate Your <span>Note Management</span> Experience</h1>
+        <p>Log in to access your secure note workspace, track ideas, and collaborate seamlessly across devices.</p>
+
+        <div class="feature-pill-list">
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Fast, JWT-secured Django REST Framework API</span>
+          </div>
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Instant search, sorting, and live date formatting</span>
+          </div>
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Cloud synchronized notes with flexible user interests</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-side-footer">
+        &copy; 2026 NoteTrack Platform. All rights reserved.
+      </div>
+    </div>
+
+    <!-- Login Form Side -->
+    <div class="auth-side-form">
+      <div class="auth-card">
+        <div class="auth-header">
+          <a href="index.html" class="auth-logo">
+            <img src="assets/images/logo.svg" alt="NoteTrack" width="34" height="34">
+            <span>NoteTrack</span>
+          </a>
+          <h2>Welcome back</h2>
+          <p>Please enter your credentials to access your notes.</p>
+        </div>
+
+        <div id="auth-alert" class="alert alert-danger" style="display: none;"></div>
+
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <div class="input-group">
+              <span class="input-icon-left"><i class="fa-regular fa-user"></i></span>
+              <input type="text" id="username" class="form-control" placeholder="Enter your username" required autocomplete="username" autofocus>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-group">
+              <span class="input-icon-left"><i class="fa-solid fa-key"></i></span>
+              <input type="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="current-password">
+              <button type="button" class="input-icon-right" id="toggle-password" aria-label="Toggle password visibility">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="auth-options">
+            <label class="form-check">
+              <input type="checkbox" id="remember-me" checked>
+              <span>Remember me</span>
+            </label>
+            <a href="admin-login.html" style="font-size: 0.85rem; font-weight: 600; color: var(--danger);">
+              <i class="fa-solid fa-shield-halved"></i> Admin Login
+            </a>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary w-100">
+            <span>Sign In</span>
+          </button>
+        </form>
+
+        <div class="auth-footer-nav">
+          Don't have an account? <a href="register.html">Create an account</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Setting trigger -->
+  <button class="api-config-trigger" onclick="UI.showApiConfigModal()">
+    <i class="fa-solid fa-gear"></i> API Base URL
+  </button>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // If already logged in, redirect away
+      Auth.redirectIfAuthenticated();
+
+      // Password visibility toggle
+      const toggleBtn = document.getElementById('toggle-password');
+      const passwordInput = document.getElementById('password');
+      toggleBtn.addEventListener('click', () => {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        toggleBtn.innerHTML = type === 'password' 
+          ? '<i class="fa-regular fa-eye"></i>' 
+          : '<i class="fa-regular fa-eye-slash"></i>';
+      });
+
+      // Handle form submission
+      const form = document.getElementById('login-form');
+      const alertBox = document.getElementById('auth-alert');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.style.display = 'none';
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+          alertBox.textContent = 'Please enter both username and password.';
+          alertBox.style.display = 'flex';
+          return;
+        }
+
+        // Loading state
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Authenticating...';
+
+        try {
+          const res = await Auth.login(username, password);
+          UI.showToast('Login successful! Redirecting...', 'success');
+
+          setTimeout(() => {
+            if (res.user && res.user.role === 'admin') {
+              window.location.href = 'admin/dashboard.html';
+            } else {
+              window.location.href = 'user/dashboard.html';
+            }
+          }, 800);
+        } catch (error) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Sign In</span>';
+          alertBox.textContent = error.message;
+          alertBox.style.display = 'flex';
+          UI.showToast(error.message, 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

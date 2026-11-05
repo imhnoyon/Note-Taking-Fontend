@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management - NoteTrack Admin</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Admin Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack <span class="badge badge-danger" style="font-size: 0.65rem; margin-left: 0.25rem;">ADMIN</span></span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Administration</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Overview</span>
+        </a>
+        <a href="users.html" class="nav-item active">
+          <i class="fa-solid fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="notes.html" class="nav-item">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>All Notes</span>
+        </a>
+
+        <div class="nav-section-title">User Workspace</div>
+        <a href="../user/dashboard.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>Switch to User View</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Administrator</div>
+            <div class="user-role-mini">
+              <span class="badge badge-danger user-role-badge">Admin</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Admin</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>User Management</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="admin-dropdown-menu" aria-label="Admin menu">
+              <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="admin-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">Administrator</div>
+                <div class="dropdown-user-email user-email-label">admin@notetrack.com</div>
+              </div>
+              <a href="users.html" class="dropdown-item">
+                <i class="fa-solid fa-users"></i> Manage Users
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-solid fa-layer-group"></i> Manage Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- User Management Body -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <div class="page-title-group">
+            <h1>User Management <span class="badge badge-primary" id="users-count-badge">0</span></h1>
+            <p>Inspect registered accounts, view author notes, update profile interests, or remove accounts.</p>
+          </div>
+          <button id="btn-refresh-users" class="btn btn-secondary">
+            <i class="fa-solid fa-rotate-right"></i> Refresh Directory
+          </button>
+        </div>
+
+        <!-- Search and Filter Bar -->
+        <div class="table-card mb-3">
+          <div class="table-toolbar">
+            <div class="search-box-filter">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="user-search-input" class="form-control" placeholder="Search by username, email, name, or interest...">
+            </div>
+
+            <div class="filter-bar">
+              <div class="d-flex align-center gap-1">
+                <span class="text-muted" style="font-size: 0.85rem;"><i class="fa-solid fa-filter"></i> Role:</span>
+                <select id="role-filter" class="form-control" style="width: auto; padding: 0.45rem 0.85rem;">
+                  <option value="all">All Roles</option>
+                  <option value="user">Users</option>
+                  <option value="admin">Administrators</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>User Details</th>
+                  <th>Email</th>
+                  <th>Role</th>
+                  <th>Interests</th>
+                  <th>User ID</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="users-tbody">
+                <tr>
+                  <td colspan="6" class="text-center text-muted" style="padding: 2.5rem;">
+                    <span class="spinner spinner-primary"></span> Loading registered users...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    let allUsers = [];
+
+    async function loadUsers() {
+      try {
+        const res = await Admin.getAllUsers();
+        allUsers = res.users || [];
+        document.getElementById('users-count-badge').textContent = allUsers.length;
+        renderUsersTable();
+      } catch (err) {
+        UI.showToast(err.message, 'error', 'Failed to load users');
+      }
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('users-tbody');
+      const query = document.getElementById('user-search-input').value.trim().toLowerCase();
+      const roleFilter = document.getElementById('role-filter').value;
+
+      let filtered = allUsers.filter(u => {
+        // Role filter
+        if (roleFilter !== 'all' && u.role !== roleFilter) return false;
+
+        // Query filter
+        if (!query) return true;
+        const usernameMatch = (u.username || '').toLowerCase().includes(query);
+        const emailMatch = (u.email || '').toLowerCase().includes(query);
+        const nameMatch = `${u.first_name || ''} ${u.last_name || ''}`.toLowerCase().includes(query);
+        const interestMatch = Array.isArray(u.interests) && u.interests.some(i => i.toLowerCase().includes(query));
+
+        return usernameMatch || emailMatch || nameMatch || interestMatch;
+      });
+
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted" style="padding: 2.5rem;">
+              No users found matching your search criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(user => {
+        const tr = document.createElement('tr');
+        const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+        const initials = UI.getInitials(fullName || user.username);
+        const interests = Array.isArray(user.interests) ? user.interests : [];
+
+        tr.innerHTML = `
+          <td>
+            <div class="d-flex align-center gap-2">
+              <div class="user-avatar" style="width: 34px; height: 34px; font-size: 0.8rem;">${initials}</div>
+              <div>
+                <strong>${UI.escapeHTML(user.username)}</strong>
+                ${fullName ? `<div class="text-muted" style="font-size: 0.8rem;">${UI.escapeHTML(fullName)}</div>` : ''}
+              </div>
+            </div>
+          </td>
+          <td style="color: var(--text-secondary); font-size: 0.85rem;">
+            ${user.email ? UI.escapeHTML(user.email) : '<span class="text-muted">No email set</span>'}
+          </td>
+          <td>
+            <span class="badge ${user.role === 'admin' ? 'badge-danger' : 'badge-primary'}">
+              ${user.role || 'user'}
+            </span>
+          </td>
+          <td>
+            <div class="tag-list" style="max-width: 250px;">
+              ${interests.length > 0 
+                ? interests.slice(0, 3).map(i => `<span class="tag-chip">${UI.escapeHTML(i)}</span>`).join('') + (interests.length > 3 ? `<span class="badge badge-secondary">+${interests.length - 3}</span>` : '')
+                : '<span class="text-muted" style="font-size: 0.8rem;">None</span>'}
+            </div>
+          </td>
+          <td>
+            <code style="font-size: 0.75rem; color: var(--text-muted);">${user.id}</code>
+          </td>
+          <td style="text-align: right;">
+            <div class="d-flex align-center justify-between gap-1" style="justify-content: flex-end;">
+              <a href="user-details.html?id=${user.id}" class="btn btn-secondary btn-sm" title="View Posts & Details">
+                <i class="fa-regular fa-folder-open"></i> Posts
+              </a>
+              <button class="action-btn btn-edit-user" data-id="${user.id}" title="Edit User">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="action-btn delete btn-delete-user" data-id="${user.id}" data-username="${UI.escapeHTML(user.username)}" title="Delete User">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+
+        // Edit user modal
+        tr.querySelector('.btn-edit-user').onclick = () => {
+          openEditUserModal(user);
+        };
+
+        // Delete user confirmation
+        tr.querySelector('.btn-delete-user').onclick = () => {
+          Admin.confirmDeleteUser(user.id, user.username, () => loadUsers());
+        };
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    function openEditUserModal(user) {
+      let tempInterests = Array.isArray(user.interests) ? [...user.interests] : [];
+
+      const renderModalChips = () => {
+        const container = document.getElementById('modal-user-interests');
+        if (!container) return;
+        container.innerHTML = tempInterests.length === 0 
+          ? '<span class="text-muted" style="font-size: 0.8rem;">No interests specified.</span>'
+          : tempInterests.map((interest, idx) => `
+              <span class="removable-chip">
+                <span>${UI.escapeHTML(interest)}</span>
+                <button type="button" data-idx="${idx}">&times;</button>
+              </span>
+            `).join('');
+
+        container.querySelectorAll('button').forEach(btn => {
+          btn.onclick = () => {
+            const idx = parseInt(btn.getAttribute('data-idx'));
+            tempInterests.splice(idx, 1);
+            renderModalChips();
+          };
+        });
+      };
+
+      const modalContent = `
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="modal-u-name" class="form-control" value="${UI.escapeHTML(user.username)}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="modal-u-email" class="form-control" value="${UI.escapeHTML(user.email || '')}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">User Role</label>
+          <select id="modal-u-role" class="form-control">
+            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Standard User</option>
+            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Administrator</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Topic Interests</label>
+          <div class="interest-editor mb-1" id="modal-user-interests" style="min-height: 60px;"></div>
+          <div class="d-flex align-center gap-1">
+            <input type="text" id="modal-add-interest-input" class="form-control" placeholder="Add an interest..." style="height: 36px;">
+            <button type="button" id="modal-btn-add-interest" class="btn btn-secondary btn-sm" style="height: 36px;">Add</button>
+          </div>
+        </div>
+      `;
+
+      UI.showModal({
+        title: `Edit User: ${user.username}`,
+        content: modalContent,
+        confirmText: 'Save User',
+        onConfirm: async () => {
+          const payload = {
+            username: document.getElementById('modal-u-name').value.trim(),
+            email: document.getElementById('modal-u-email').value.trim(),
+            role: document.getElementById('modal-u-role').value,
+            interests: tempInterests
+          };
+
+          await Admin.updateUser(user.id, payload);
+          UI.showToast('User updated successfully.', 'success');
+          loadUsers();
+        }
+      });
+
+      // Hook modal chips and add button after DOM insert
+      setTimeout(() => {
+        renderModalChips();
+        const addBtn = document.getElementById('modal-btn-add-interest');
+        const input = document.getElementById('modal-add-interest-input');
+        if (addBtn && input) {
+          addBtn.onclick = () => {
+            const v = input.value.trim();
+            if (v && !tempInterests.includes(v)) {
+              tempInterests.push(v);
+              input.value = '';
+              renderModalChips();
+            }
+          };
+          input.onkeydown = (e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              addBtn.click();
+            }
+          };
+        }
+      }, 50);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth('admin')) return;
+
+      loadUsers();
+
+      document.getElementById('user-search-input').addEventListener('input', renderUsersTable);
+      document.getElementById('role-filter').addEventListener('change', renderUsersTable);
+      document.getElementById('btn-refresh-users').addEventListener('click', () => {
+        UI.showToast('Refreshing users directory...', 'info', '', 1500);
+        loadUsers();
+      });
+    });
+  </script>
+</body>
+</html>
+

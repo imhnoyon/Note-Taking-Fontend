@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - NoteTrack</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <style>
+    .interest-analytics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+    .interest-box {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: transform var(--transition-fast);
+    }
+    .interest-box:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+    .interest-box-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .interest-box-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Admin Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack <span class="badge badge-danger" style="font-size: 0.65rem; margin-left: 0.25rem;">ADMIN</span></span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Administration</div>
+        <a href="dashboard.html" class="nav-item active">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Overview</span>
+        </a>
+        <a href="users.html" class="nav-item">
+          <i class="fa-solid fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="notes.html" class="nav-item">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>All Notes</span>
+        </a>
+
+        <div class="nav-section-title">User Workspace</div>
+        <a href="../user/dashboard.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>Switch to User View</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Administrator</div>
+            <div class="user-role-mini">
+              <span class="badge badge-danger user-role-badge">Admin</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Admin</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>Overview</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <button class="icon-action-btn" onclick="UI.showApiConfigModal()" title="API Settings">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <!-- Admin Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="admin-dropdown-menu" aria-label="Admin menu">
+              <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="admin-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">Administrator</div>
+                <div class="dropdown-user-email user-email-label">admin@notetrack.com</div>
+              </div>
+              <a href="users.html" class="dropdown-item">
+                <i class="fa-solid fa-users"></i> Manage Users
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-solid fa-layer-group"></i> Manage Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard View Body -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <div class="page-title-group">
+            <h1>Platform Administration</h1>
+            <p>System metrics, user directory, and content governance.</p>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <button id="btn-refresh-admin" class="btn btn-secondary">
+              <i class="fa-solid fa-rotate-right"></i> Refresh
+            </button>
+            <a href="users.html" class="btn btn-primary">
+              <i class="fa-solid fa-users"></i> View All Users
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-indigo">
+              <i class="fa-solid fa-users"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-admin-users">0</div>
+              <div class="stat-label">Total Users Registered</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-emerald">
+              <i class="fa-solid fa-note-sticky"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-admin-notes">0</div>
+              <div class="stat-label">Total System Notes</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-amber">
+              <i class="fa-solid fa-tags"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-admin-interests">0</div>
+              <div class="stat-label">Active Interest Groups</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-sky">
+              <i class="fa-solid fa-server"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" style="font-size: 1.15rem; color: var(--success); font-weight: 700;">Operational</div>
+              <div class="stat-label">System Service Status</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section: User Interests Analytics -->
+        <div class="d-flex align-center justify-between mb-2">
+          <div>
+            <h2>Users Grouped by Interests</h2>
+            <p style="font-size: 0.85rem;">Topic distribution analytics across all users</p>
+          </div>
+        </div>
+
+        <div class="interest-analytics-grid" id="interests-grid">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+
+        <!-- Section: Recent System Notes -->
+        <div class="d-flex align-center justify-between mb-2 mt-3">
+          <div>
+            <h2>System Notes Overview</h2>
+            <p style="font-size: 0.85rem;">Latest notes created across all platform users via <code>/api/note-lists/</code></p>
+          </div>
+          <a href="notes.html" class="btn btn-secondary btn-sm">Manage All Notes</a>
+        </div>
+
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Author</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th style="text-align: right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-recent-notes-tbody">
+                <tr>
+                  <td colspan="5" class="text-center text-muted" style="padding: 2rem;">
+                    <span class="spinner spinner-primary"></span> Loading system notes...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    async function loadAdminDashboard() {
+      try {
+        // Parallel requests
+        const [usersRes, notesRes, interests] = await Promise.all([
+          Admin.getAllUsers(),
+          Admin.getAllNotes(),
+          Admin.getInterestsGrouped()
+        ]);
+
+        // Stats
+        document.getElementById('stat-admin-users').textContent = usersRes.count || usersRes.users.length;
+        document.getElementById('stat-admin-notes').textContent = notesRes.count || notesRes.notes.length;
+        document.getElementById('stat-admin-interests').textContent = interests.length;
+
+        // Render Interests
+        renderInterestGroups(interests);
+
+        // Render Recent Notes
+        renderRecentNotes(notesRes.notes);
+      } catch (err) {
+        UI.showToast(err.message, 'error', 'Admin Load Failed');
+      }
+    }
+
+    function renderInterestGroups(interests) {
+      const container = document.getElementById('interests-grid');
+      container.innerHTML = '';
+
+      if (!interests || interests.length === 0) {
+        container.innerHTML = `
+          <div class="card p-3 text-center text-muted w-100" style="grid-column: 1 / -1;">
+            No user interests grouped yet. Users can add interests in their profile.
+          </div>
+        `;
+        return;
+      }
+
+      interests.forEach(group => {
+        const box = document.createElement('div');
+        box.className = 'interest-box';
+        const users = group.users || [];
+        box.innerHTML = `
+          <div class="interest-box-header">
+            <div class="interest-box-title">
+              <i class="fa-solid fa-bookmark" style="color: var(--primary); margin-right: 0.4rem;"></i>
+              ${UI.escapeHTML(group.interest)}
+            </div>
+            <span class="badge badge-primary">${users.length} ${users.length === 1 ? 'user' : 'users'}</span>
+          </div>
+          <div class="tag-list">
+            ${users.map(u => `<span class="tag-chip"><i class="fa-regular fa-user"></i> ${UI.escapeHTML(u)}</span>`).join('')}
+          </div>
+        `;
+        container.appendChild(box);
+      });
+    }
+
+    function renderRecentNotes(notes) {
+      const tbody = document.getElementById('admin-recent-notes-tbody');
+      tbody.innerHTML = '';
+
+      if (!notes || notes.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center text-muted" style="padding: 2.5rem;">
+              No notes exist in the system yet.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      const recentNotes = notes.slice(0, 5);
+
+      recentNotes.forEach(note => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <strong>${UI.escapeHTML(note.title)}</strong>
+            <div class="text-muted" style="font-size: 0.8rem; max-width: 350px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${UI.escapeHTML(note.description)}
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-secondary"><i class="fa-regular fa-user"></i> ${UI.escapeHTML(note.username || 'User')}</span>
+          </td>
+          <td style="font-size: 0.85rem; color: var(--text-secondary);">
+            ${UI.formatDate(note.created_at)}
+          </td>
+          <td style="font-size: 0.85rem; color: var(--text-secondary);">
+            ${UI.timeAgo(note.updated_at || note.created_at)}
+          </td>
+          <td style="text-align: right;">
+            <button class="action-btn btn-edit-note" data-id="${note.id}" title="Edit Note">
+              <i class="fa-solid fa-pen-to-square"></i>
+            </button>
+            <button class="action-btn delete btn-delete-note" data-id="${note.id}" data-title="${UI.escapeHTML(note.title)}" title="Delete Note">
+              <i class="fa-regular fa-trash-can"></i>
+            </button>
+          </td>
+        `;
+
+        tr.querySelector('.btn-edit-note').onclick = () => {
+          Admin.openEditNoteModal(note, () => loadAdminDashboard());
+        };
+
+        tr.querySelector('.btn-delete-note').onclick = () => {
+          Admin.confirmDeleteNote(note.id, note.title, () => loadAdminDashboard());
+        };
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Guard: strictly require admin
+      if (!Auth.requireAuth('admin')) return;
+
+      loadAdminDashboard();
+
+      document.getElementById('btn-refresh-admin').addEventListener('click', () => {
+        UI.showToast('Refreshing admin metrics...', 'info', '', 1500);
+        loadAdminDashboard();
+      });
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - NoteTrack</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a href="dashboard.html" class="nav-item active">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="notes.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>My Notes</span>
+        </a>
+        <a href="create-note.html" class="nav-item">
+          <i class="fa-solid fa-plus"></i>
+          <span>Create Note</span>
+        </a>
+
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-item">
+          <i class="fa-regular fa-user"></i>
+          <span>My Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar">U</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Loading...</div>
+            <div class="user-role-mini">
+              <span class="badge badge-primary user-role-badge">User</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Home</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>Dashboard</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <button class="icon-action-btn" onclick="UI.showApiConfigModal()" title="API Settings">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="user-dropdown-menu" aria-label="User menu">
+              <div class="user-avatar">U</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">User</div>
+                <div class="dropdown-user-email user-email-label">user@example.com</div>
+              </div>
+              <a href="profile.html" class="dropdown-item">
+                <i class="fa-regular fa-user"></i> My Profile
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-regular fa-note-sticky"></i> My Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard View Body -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <div class="page-title-group">
+            <h1>Workspace Overview</h1>
+            <p>Welcome back, <span class="user-name-label fw-bold">User</span>. Here is your notes summary.</p>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <button id="btn-refresh-dashboard" class="btn btn-secondary">
+              <i class="fa-solid fa-rotate-right"></i> Refresh
+            </button>
+            <button id="btn-quick-create" class="btn btn-primary">
+              <i class="fa-solid fa-plus"></i> Quick Note
+            </button>
+          </div>
+        </div>
+
+        <!-- Metric Stat Cards -->
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-indigo">
+              <i class="fa-regular fa-note-sticky"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-total-notes">0</div>
+              <div class="stat-label">Total Notes</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-emerald">
+              <i class="fa-solid fa-calendar-day"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-notes-today">0</div>
+              <div class="stat-label">Created Today</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-amber">
+              <i class="fa-solid fa-file-lines"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value" id="stat-total-chars">0</div>
+              <div class="stat-label">Total Characters</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon stat-icon-sky">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <div class="stat-info">
+              <div class="stat-value"><span class="badge badge-success" style="font-size: 0.85rem;">Active</span></div>
+              <div class="stat-label">Account Verified</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Notes Section Header -->
+        <div class="d-flex align-center justify-between mb-2">
+          <h2>Recent Notes</h2>
+          <a href="notes.html" class="btn btn-secondary btn-sm">
+            View All Notes <i class="fa-solid fa-arrow-right" style="font-size: 0.75rem;"></i>
+          </a>
+        </div>
+
+        <!-- Recent Notes Container -->
+        <div class="notes-grid" id="recent-notes-container">
+          <!-- Populated dynamically by dashboard.js -->
+        </div>
+
+        <!-- Empty State (Shown if 0 notes) -->
+        <div class="empty-state" id="recent-empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <i class="fa-regular fa-note-sticky"></i>
+          </div>
+          <h3>No notes recorded yet</h3>
+          <p>Get started by creating your first note. Ideas, plans, and meeting notes can be tracked effortlessly.</p>
+          <a href="create-note.html" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> Create Your First Note
+          </a>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/notes.js"></script>
+  <script src="../assets/js/dashboard.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Dashboard.init();
+    });
+  </script>
+</body>
+</html>
+

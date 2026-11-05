@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NoteTrack SaaS - Professional Note Tracking System</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+  <style>
+    .landing-hero {
+      min-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 4rem 1.5rem;
+      position: relative;
+    }
+    .landing-nav {
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      max-width: 1300px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      line-height: 1.15;
+      max-width: 800px;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.03em;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, var(--primary) 0%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      max-width: 620px;
+      color: var(--text-secondary);
+      margin-bottom: 2.5rem;
+      line-height: 1.6;
+    }
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 3.5rem;
+    }
+    .preview-card {
+      max-width: 960px;
+      width: 100%;
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-surface);
+      box-shadow: var(--shadow-xl);
+      padding: 1rem;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      max-width: 1100px;
+      margin: 3rem auto 6rem;
+      padding: 0 1.5rem;
+    }
+    .feature-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      transition: transform var(--transition-fast);
+    }
+    .feature-box:hover {
+      transform: translateY(-4px);
+    }
+    .feature-icon-wrapper {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      background: var(--primary-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header class="landing-nav">
+    <a href="index.html" class="auth-logo">
+      <img src="assets/images/logo.svg" alt="NoteTrack" width="34" height="34">
+      <span>NoteTrack</span>
+    </a>
+    <div class="d-flex align-center gap-2">
+      <button class="icon-action-btn theme-toggle-btn" aria-label="Toggle theme">
+        <i class="fa-solid fa-moon"></i>
+      </button>
+      <a href="login.html" class="btn btn-secondary btn-sm">Sign In</a>
+      <a href="register.html" class="btn btn-primary btn-sm">Create Account</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <main class="landing-hero">
+    <div class="hero-pill">
+      <i class="fa-solid fa-bolt"></i> Professional Note Tracking Platform
+    </div>
+    <h1 class="hero-title">
+      Intelligent Note Tracking for <span>Modern Creators</span> & Teams
+    </h1>
+    <p class="hero-subtitle">
+      Organize thoughts, manage ideas, and oversee users with a fast, responsive, and beautiful interface powered by pure HTML5, CSS3, and modern JavaScript.
+    </p>
+
+    <div class="hero-actions">
+      <a href="login.html" class="btn btn-primary btn-lg">
+        <i class="fa-solid fa-right-to-bracket"></i> User Dashboard
+      </a>
+      <a href="register.html" class="btn btn-secondary btn-lg">
+        <i class="fa-solid fa-user-plus"></i> Get Started Free
+      </a>
+      <a href="admin-login.html" class="btn btn-outline-danger btn-lg">
+        <i class="fa-solid fa-shield-halved"></i> Admin Portal
+      </a>
+    </div>
+
+    <!-- Feature Grid -->
+    <div class="feature-grid">
+      <div class="feature-box">
+        <div class="feature-icon-wrapper">
+          <i class="fa-solid fa-note-sticky"></i>
+        </div>
+        <h3>Real-time Note Management</h3>
+        <p class="mt-1">Create, edit, view, search, and delete your notes seamlessly with instant feedback and robust validation.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon-wrapper">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <h3>Role-Based Access Control</h3>
+        <p class="mt-1">Dedicated User and Admin tiers. Backend JWT authentication verifies roles and protects sensitive endpoints.</p>
+      </div>
+      <div class="feature-box">
+        <div class="feature-icon-wrapper">
+          <i class="fa-solid fa-users-gear"></i>
+        </div>
+        <h3>Admin Analytics & Moderation</h3>
+        <p class="mt-1">Explore all registered users, moderate system posts, and analyze interest distribution analytics.</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- API Settings Pill -->
+  <button class="api-config-trigger" onclick="UI.showApiConfigModal()">
+    <i class="fa-solid fa-gear"></i> API Base URL
+  </button>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    // If user is already authenticated, automatically route them
+    document.addEventListener('DOMContentLoaded', () => {
+      if (Auth.isAuthenticated()) {
+        const user = Auth.getCurrentUser();
+        if (user && user.role === 'admin') {
+          window.location.href = 'admin/dashboard.html';
+        } else {
+          window.location.href = 'user/dashboard.html';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+

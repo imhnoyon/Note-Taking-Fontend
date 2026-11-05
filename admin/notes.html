@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage All Notes - NoteTrack Admin</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Admin Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack <span class="badge badge-danger" style="font-size: 0.65rem; margin-left: 0.25rem;">ADMIN</span></span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Administration</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Overview</span>
+        </a>
+        <a href="users.html" class="nav-item">
+          <i class="fa-solid fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="notes.html" class="nav-item active">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>All Notes</span>
+        </a>
+
+        <div class="nav-section-title">User Workspace</div>
+        <a href="../user/dashboard.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>Switch to User View</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Administrator</div>
+            <div class="user-role-mini">
+              <span class="badge badge-danger user-role-badge">Admin</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Admin</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>All System Notes</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="admin-dropdown-menu" aria-label="Admin menu">
+              <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="admin-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">Administrator</div>
+                <div class="dropdown-user-email user-email-label">admin@notetrack.com</div>
+              </div>
+              <a href="users.html" class="dropdown-item">
+                <i class="fa-solid fa-users"></i> Manage Users
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-solid fa-layer-group"></i> Manage Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- All Notes Content -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <div class="page-title-group">
+            <h1>System Notes Moderation <span class="badge badge-primary" id="all-notes-count-badge">0</span></h1>
+            <p>Admin oversight of all notes across all registered platform users.</p>
+          </div>
+          <button id="btn-refresh-notes" class="btn btn-secondary">
+            <i class="fa-solid fa-rotate-right"></i> Refresh Notes
+          </button>
+        </div>
+
+        <!-- Toolbar & Filter -->
+        <div class="table-card mb-3">
+          <div class="table-toolbar">
+            <div class="search-box-filter">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="admin-note-search" class="form-control" placeholder="Search by note title, content, or author...">
+            </div>
+
+            <div class="filter-bar">
+              <div class="d-flex align-center gap-1">
+                <span class="text-muted" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-down-wide-short"></i> Sort:</span>
+                <select id="admin-note-sort" class="form-control" style="width: auto; padding: 0.45rem 0.85rem;">
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="title-asc">Title (A - Z)</option>
+                  <option value="author-asc">Author (A - Z)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Title & Excerpt</th>
+                  <th>Author</th>
+                  <th>Note ID</th>
+                  <th>Created At</th>
+                  <th>Last Updated</th>
+                  <th style="text-align: right;">Moderation</th>
+                </tr>
+              </thead>
+              <tbody id="all-notes-tbody">
+                <tr>
+                  <td colspan="6" class="text-center text-muted" style="padding: 2.5rem;">
+                    <span class="spinner spinner-primary"></span> Loading all system notes...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    let systemNotes = [];
+
+    async function loadAllNotes() {
+      try {
+        const res = await Admin.getAllNotes();
+        systemNotes = res.notes || [];
+        document.getElementById('all-notes-count-badge').textContent = systemNotes.length;
+        renderAdminNotesTable();
+      } catch (err) {
+        UI.showToast(err.message, 'error', 'Failed to load system notes');
+      }
+    }
+
+    function renderAdminNotesTable() {
+      const tbody = document.getElementById('all-notes-tbody');
+      const query = document.getElementById('admin-note-search').value.trim().toLowerCase();
+      const sort = document.getElementById('admin-note-sort').value;
+
+      let filtered = systemNotes.filter(n => {
+        if (!query) return true;
+        const titleMatch = (n.title || '').toLowerCase().includes(query);
+        const descMatch = (n.description || '').toLowerCase().includes(query);
+        const authorMatch = (n.username || '').toLowerCase().includes(query);
+        return titleMatch || descMatch || authorMatch;
+      });
+
+      // Sorting
+      filtered.sort((a, b) => {
+        const dateA = new Date(a.created_at || a.updated_at || 0).getTime();
+        const dateB = new Date(b.created_at || b.updated_at || 0).getTime();
+        if (sort === 'oldest') return dateA - dateB;
+        if (sort === 'title-asc') return (a.title || '').localeCompare(b.title || '');
+        if (sort === 'author-asc') return (a.username || '').localeCompare(b.username || '');
+        return dateB - dateA;
+      });
+
+      tbody.innerHTML = '';
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="text-center text-muted" style="padding: 2.5rem;">
+              No notes match your filter or no notes exist.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      filtered.forEach(note => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>
+            <strong>${UI.escapeHTML(note.title)}</strong>
+            <div class="text-muted" style="font-size: 0.8rem; max-width: 320px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              ${UI.escapeHTML(note.description)}
+            </div>
+          </td>
+          <td>
+            <span class="badge badge-secondary"><i class="fa-regular fa-user"></i> ${UI.escapeHTML(note.username || 'User')}</span>
+          </td>
+          <td>
+            <code style="font-size: 0.75rem; color: var(--text-muted);">${note.id}</code>
+          </td>
+          <td style="font-size: 0.85rem; color: var(--text-secondary);">
+            ${UI.formatDate(note.created_at)}
+          </td>
+          <td style="font-size: 0.85rem; color: var(--text-secondary);">
+            ${UI.timeAgo(note.updated_at || note.created_at)}
+          </td>
+          <td style="text-align: right;">
+            <div class="d-flex align-center gap-1" style="justify-content: flex-end;">
+              <button class="action-btn btn-edit-note" title="Moderate/Edit Note">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </button>
+              <button class="action-btn delete btn-delete-note" title="Delete Note">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </td>
+        `;
+
+        tr.querySelector('.btn-edit-note').onclick = () => {
+          Admin.openEditNoteModal(note, () => loadAllNotes());
+        };
+
+        tr.querySelector('.btn-delete-note').onclick = () => {
+          Admin.confirmDeleteNote(note.id, note.title, () => loadAllNotes());
+        };
+
+        tbody.appendChild(tr);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth('admin')) return;
+
+      loadAllNotes();
+
+      document.getElementById('admin-note-search').addEventListener('input', renderAdminNotesTable);
+      document.getElementById('admin-note-sort').addEventListener('change', renderAdminNotesTable);
+      document.getElementById('btn-refresh-notes').addEventListener('click', () => {
+        UI.showToast('Refreshing system notes...', 'info', '', 1500);
+        loadAllNotes();
+      });
+    });
+  </script>
+</body>
+</html>
+

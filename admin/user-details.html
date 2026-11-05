@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Drilldown & Posts - NoteTrack Admin</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <style>
+    .user-profile-header-card {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .user-stats-strip {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border-color);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Admin Sidebar -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack <span class="badge badge-danger" style="font-size: 0.65rem; margin-left: 0.25rem;">ADMIN</span></span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Administration</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>Overview</span>
+        </a>
+        <a href="users.html" class="nav-item active">
+          <i class="fa-solid fa-users"></i>
+          <span>User Management</span>
+        </a>
+        <a href="notes.html" class="nav-item">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>All Notes</span>
+        </a>
+
+        <div class="nav-section-title">User Workspace</div>
+        <a href="../user/dashboard.html" class="nav-item">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>Switch to User View</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Administrator</div>
+            <div class="user-role-mini">
+              <span class="badge badge-danger user-role-badge">Admin</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Admin</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <a href="users.html">Users</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>User Drilldown</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="admin-dropdown-menu" aria-label="Admin menu">
+              <div class="user-avatar" style="background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);">A</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="admin-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">Administrator</div>
+                <div class="dropdown-user-email user-email-label">admin@notetrack.com</div>
+              </div>
+              <a href="users.html" class="dropdown-item">
+                <i class="fa-solid fa-users"></i> Manage Users
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-solid fa-layer-group"></i> Manage Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Content -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <a href="users.html" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to All Users
+          </a>
+          <button id="btn-refresh-drilldown" class="btn btn-secondary">
+            <i class="fa-solid fa-rotate-right"></i> Refresh
+          </button>
+        </div>
+
+        <!-- User Profile Summary Header -->
+        <div class="user-profile-header-card" id="user-info-card">
+          <div class="d-flex align-center justify-between flex-wrap gap-2">
+            <div class="d-flex align-center gap-3">
+              <div class="user-avatar" id="detail-user-avatar" style="width: 58px; height: 58px; font-size: 1.4rem;">U</div>
+              <div>
+                <h1 style="font-size: 1.6rem; margin-bottom: 0.2rem;" id="detail-user-name">Loading User...</h1>
+                <div class="d-flex align-center gap-2">
+                  <span class="badge badge-primary" id="detail-user-role">user</span>
+                  <span class="text-muted" style="font-size: 0.85rem;" id="detail-user-email">--</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <button id="btn-admin-del-user" class="btn btn-outline-danger btn-sm">
+                <i class="fa-regular fa-trash-can"></i> Delete Account
+              </button>
+            </div>
+          </div>
+
+          <div class="user-stats-strip">
+            <div>
+              <span class="text-muted" style="font-size: 0.8rem; display: block;">User ID</span>
+              <code id="detail-user-id" style="font-size: 0.85rem;">--</code>
+            </div>
+            <div>
+              <span class="text-muted" style="font-size: 0.8rem; display: block;">Total Authored Notes</span>
+              <strong id="detail-user-notes-count" style="font-size: 1.1rem;">0</strong>
+            </div>
+            <div style="flex: 1;">
+              <span class="text-muted" style="font-size: 0.8rem; display: block; margin-bottom: 0.35rem;">Topic Interests</span>
+              <div class="tag-list" id="detail-user-interests">
+                <span class="text-muted" style="font-size: 0.8rem;">None</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Posts Section -->
+        <div class="d-flex align-center justify-between mb-2">
+          <div>
+            <h2>Notes Authored by this User</h2>
+            <p style="font-size: 0.85rem;">Retrieved via endpoint: <code>/api/users/{user_id}/posts/</code></p>
+          </div>
+        </div>
+
+        <!-- Posts Grid -->
+        <div class="notes-grid" id="user-posts-container">
+          <div class="skeleton skeleton-card"></div>
+          <div class="skeleton skeleton-card"></div>
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="posts-empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <i class="fa-regular fa-folder-open"></i>
+          </div>
+          <h3>No notes created by this user</h3>
+          <p>This user has not authored any notes or all notes have been deleted.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/admin.js"></script>
+  <script>
+    let currentUserId = null;
+    let currentUserData = null;
+
+    async function loadUserDrilldown() {
+      const urlParams = new URLSearchParams(window.location.search);
+      currentUserId = urlParams.get('id');
+
+      if (!currentUserId) {
+        UI.showToast('No user ID specified in URL.', 'error');
+        setTimeout(() => window.location.href = 'users.html', 1200);
+        return;
+      }
+
+      try {
+        // Fetch user info and user posts in parallel
+        const [user, posts] = await Promise.all([
+          Admin.getUserById(currentUserId),
+          Admin.getUserPosts(currentUserId)
+        ]);
+
+        currentUserData = user;
+
+        // Render User Header
+        renderUserDetails(user);
+
+        // Render Posts
+        renderUserPosts(posts);
+      } catch (err) {
+        UI.showToast(err.message, 'error', 'Drilldown Failed');
+      }
+    }
+
+    function renderUserDetails(user) {
+      const fullName = [user.first_name, user.last_name].filter(Boolean).join(' ');
+      document.getElementById('detail-user-name').textContent = fullName ? `${fullName} (@${user.username})` : user.username;
+      document.getElementById('detail-user-avatar').textContent = UI.getInitials(fullName || user.username);
+      document.getElementById('detail-user-email').textContent = user.email || 'No email registered';
+      document.getElementById('detail-user-id').textContent = user.id;
+
+      const roleBadge = document.getElementById('detail-user-role');
+      roleBadge.textContent = user.role || 'user';
+      roleBadge.className = user.role === 'admin' ? 'badge badge-danger' : 'badge badge-primary';
+
+      const interestsContainer = document.getElementById('detail-user-interests');
+      interestsContainer.innerHTML = '';
+      if (Array.isArray(user.interests) && user.interests.length > 0) {
+        user.interests.forEach(i => {
+          const chip = document.createElement('span');
+          chip.className = 'tag-chip';
+          chip.textContent = i;
+          interestsContainer.appendChild(chip);
+        });
+      } else {
+        interestsContainer.innerHTML = '<span class="text-muted" style="font-size: 0.8rem;">No interests specified</span>';
+      }
+    }
+
+    function renderUserPosts(posts) {
+      const container = document.getElementById('user-posts-container');
+      const emptyState = document.getElementById('posts-empty-state');
+      const countEl = document.getElementById('detail-user-notes-count');
+
+      countEl.textContent = posts ? posts.length : 0;
+      container.innerHTML = '';
+
+      if (!posts || posts.length === 0) {
+        emptyState.style.display = 'flex';
+        container.style.display = 'none';
+        return;
+      }
+
+      emptyState.style.display = 'none';
+      container.style.display = 'grid';
+
+      posts.forEach(post => {
+        const card = document.createElement('div');
+        card.className = 'note-card';
+        card.innerHTML = `
+          <div class="note-card-header">
+            <h3 class="note-card-title">${UI.escapeHTML(post.title)}</h3>
+            <div class="note-actions">
+              <button class="action-btn btn-edit-post" title="Edit Note"><i class="fa-solid fa-pen-to-square"></i></button>
+              <button class="action-btn delete btn-delete-post" title="Delete Note"><i class="fa-regular fa-trash-can"></i></button>
+            </div>
+          </div>
+          <div class="note-card-body">
+            <p class="note-card-desc">${UI.escapeHTML(post.description)}</p>
+          </div>
+          <div class="note-card-footer">
+            <span><i class="fa-regular fa-calendar"></i> ${UI.formatDate(post.created_at)}</span>
+            <span><i class="fa-regular fa-clock"></i> ${UI.timeAgo(post.updated_at || post.created_at)}</span>
+          </div>
+        `;
+
+        card.querySelector('.btn-edit-post').onclick = () => {
+          Admin.openEditNoteModal(post, () => loadUserDrilldown());
+        };
+
+        card.querySelector('.btn-delete-post').onclick = () => {
+          Admin.confirmDeleteNote(post.id, post.title, () => loadUserDrilldown());
+        };
+
+        container.appendChild(card);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth('admin')) return;
+
+      loadUserDrilldown();
+
+      document.getElementById('btn-refresh-drilldown').addEventListener('click', () => {
+        UI.showToast('Refreshing user posts...', 'info', '', 1500);
+        loadUserDrilldown();
+      });
+
+      document.getElementById('btn-admin-del-user').addEventListener('click', () => {
+        if (!currentUserData) return;
+        Admin.confirmDeleteUser(currentUserData.id, currentUserData.username, () => {
+          window.location.href = 'users.html';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+

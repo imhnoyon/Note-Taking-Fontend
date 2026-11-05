@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Notes - NoteTrack</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="notes.html" class="nav-item active">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>My Notes</span>
+        </a>
+        <a href="create-note.html" class="nav-item">
+          <i class="fa-solid fa-plus"></i>
+          <span>Create Note</span>
+        </a>
+
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-item">
+          <i class="fa-regular fa-user"></i>
+          <span>My Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar">U</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Loading...</div>
+            <div class="user-role-mini">
+              <span class="badge badge-primary user-role-badge">User</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Home</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>My Notes</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <button class="icon-action-btn" onclick="UI.showApiConfigModal()" title="API Settings">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="user-dropdown-menu" aria-label="User menu">
+              <div class="user-avatar">U</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">User</div>
+                <div class="dropdown-user-email user-email-label">user@example.com</div>
+              </div>
+              <a href="profile.html" class="dropdown-item">
+                <i class="fa-regular fa-user"></i> My Profile
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-regular fa-note-sticky"></i> My Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Notes Management Body -->
+      <main class="page-content">
+        <div class="page-header-row">
+          <div class="page-title-group">
+            <h1>My Notes <span class="badge badge-primary" id="notes-count-badge">0</span></h1>
+            <p>View, organize, search, and update all your personal notes.</p>
+          </div>
+          <a href="create-note.html" class="btn btn-primary">
+            <i class="fa-solid fa-plus"></i> New Note
+          </a>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="table-card mb-3">
+          <div class="table-toolbar">
+            <div class="search-box-filter">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="search-input" class="form-control" placeholder="Search by title or content...">
+            </div>
+
+            <div class="filter-bar">
+              <div class="d-flex align-center gap-1">
+                <span class="text-muted" style="font-size: 0.85rem;"><i class="fa-solid fa-arrow-down-wide-short"></i> Sort:</span>
+                <select id="sort-select" class="form-control" style="width: auto; padding: 0.45rem 0.85rem;">
+                  <option value="newest">Newest First</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="title-asc">Title (A - Z)</option>
+                  <option value="title-desc">Title (Z - A)</option>
+                </select>
+              </div>
+
+              <button id="btn-refresh" class="btn btn-secondary btn-icon" title="Refresh Notes">
+                <i class="fa-solid fa-rotate-right"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notes Grid -->
+        <div class="notes-grid" id="notes-container">
+          <!-- Populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="notes-empty-state" style="display: none;">
+          <div class="empty-state-icon">
+            <i class="fa-regular fa-note-sticky"></i>
+          </div>
+          <h3 id="empty-title">No notes found</h3>
+          <p id="empty-desc">You haven't recorded any notes yet or no notes match your search filter.</p>
+          <a href="create-note.html" class="btn btn-primary" id="empty-btn">
+            <i class="fa-solid fa-plus"></i> Create Note
+          </a>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/notes.js"></script>
+  <script>
+    let allNotes = [];
+
+    async function loadNotes() {
+      const container = document.getElementById('notes-container');
+      const countBadge = document.getElementById('notes-count-badge');
+      const emptyState = document.getElementById('notes-empty-state');
+
+      // Loading skeleton
+      container.innerHTML = `
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+        <div class="skeleton skeleton-card"></div>
+      `;
+      emptyState.style.display = 'none';
+
+      try {
+        const { notes } = await Notes.getAllNotes();
+        allNotes = notes || [];
+        countBadge.textContent = allNotes.length;
+        renderFilteredNotes();
+      } catch (err) {
+        container.innerHTML = '';
+        UI.showToast(err.message, 'error', 'Failed to load notes');
+      }
+    }
+
+    function renderFilteredNotes() {
+      const container = document.getElementById('notes-container');
+      const emptyState = document.getElementById('notes-empty-state');
+      const emptyTitle = document.getElementById('empty-title');
+      const emptyDesc = document.getElementById('empty-desc');
+
+      const query = document.getElementById('search-input').value;
+      const sort = document.getElementById('sort-select').value;
+
+      const filtered = Notes.filterAndSortNotes(allNotes, { query, sort });
+
+      container.innerHTML = '';
+
+      if (filtered.length === 0) {
+        if (allNotes.length === 0) {
+          emptyTitle.textContent = 'No notes created yet';
+          emptyDesc.textContent = 'Get started by creating your first note.';
+        } else {
+          emptyTitle.textContent = 'No matching notes';
+          emptyDesc.textContent = `No notes match "${query}". Try another search term.`;
+        }
+        emptyState.style.display = 'flex';
+      } else {
+        emptyState.style.display = 'none';
+        filtered.forEach(note => {
+          const card = Notes.createNoteCardElement(note, true);
+          container.appendChild(card);
+        });
+
+        // Bind delete action
+        container.querySelectorAll('.btn-delete-note').forEach(btn => {
+          btn.onclick = (e) => {
+            e.preventDefault();
+            const id = btn.getAttribute('data-id');
+            const title = btn.getAttribute('data-title');
+            Notes.confirmDelete(id, title, () => loadNotes());
+          };
+        });
+
+        // Bind quick edit modal action
+        container.querySelectorAll('.btn-edit-note').forEach(btn => {
+          btn.onclick = async (e) => {
+            e.preventDefault();
+            const id = btn.getAttribute('data-id');
+            try {
+              const note = await Notes.getNoteById(id);
+              Notes.openEditModal(note, () => loadNotes());
+            } catch (err) {
+              UI.showToast(err.message, 'error');
+            }
+          };
+        });
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      loadNotes();
+
+      // Search & Sort listeners
+      document.getElementById('search-input').addEventListener('input', renderFilteredNotes);
+      document.getElementById('sort-select').addEventListener('change', renderFilteredNotes);
+      document.getElementById('btn-refresh').addEventListener('click', () => {
+        UI.showToast('Refreshing notes...', 'info', '', 1500);
+        loadNotes();
+      });
+    });
+  </script>
+</body>
+</html>
+

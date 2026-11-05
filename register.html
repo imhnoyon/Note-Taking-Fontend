@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Account - NoteTrack SaaS</title>
+  <link rel="icon" type="image/svg+xml" href="assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/auth.css">
+  <link rel="stylesheet" href="assets/css/responsive.css">
+</head>
+<body>
+  <div class="auth-wrapper">
+    <!-- Brand Feature Sidebar -->
+    <div class="auth-side-brand">
+      <div class="auth-side-content">
+        <div class="brand-badge">
+          <i class="fa-solid fa-sparkles"></i> Instant Account Creation
+        </div>
+        <h1>Join the Next Generation of <span>Note Takers</span></h1>
+        <p>Start tracking your daily ideas, sprint notes, and key takeaways with instant cloud synchronization.</p>
+
+        <div class="feature-pill-list">
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Unlimited personal notes and fast markdown rendering</span>
+          </div>
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Customizable profile and technology interests</span>
+          </div>
+          <div class="feature-pill-item">
+            <div class="feature-pill-icon"><i class="fa-solid fa-check"></i></div>
+            <span>Clean, dark-mode ready responsive user dashboard</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="auth-side-footer">
+        &copy; 2026 NoteTrack Platform. All rights reserved.
+      </div>
+    </div>
+
+    <!-- Registration Form Side -->
+    <div class="auth-side-form">
+      <div class="auth-card">
+        <div class="auth-header">
+          <a href="index.html" class="auth-logo">
+            <img src="assets/images/logo.svg" alt="NoteTrack" width="34" height="34">
+            <span>NoteTrack</span>
+          </a>
+          <h2>Create an account</h2>
+          <p>Get started in seconds. No credit card required.</p>
+        </div>
+
+        <div id="auth-alert" class="alert alert-danger" style="display: none;"></div>
+
+        <form id="register-form" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="username">Username</label>
+            <div class="input-group">
+              <span class="input-icon-left"><i class="fa-regular fa-user"></i></span>
+              <input type="text" id="username" class="form-control" placeholder="Choose a username" required autocomplete="username" autofocus>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="input-group">
+              <span class="input-icon-left"><i class="fa-solid fa-key"></i></span>
+              <input type="password" id="password" class="form-control" placeholder="Create a strong password" required autocomplete="new-password">
+              <button type="button" class="input-icon-right toggle-pwd" data-target="password" aria-label="Toggle password visibility">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+            <span class="text-muted" style="font-size: 0.75rem; margin-top: 0.2rem;">Minimum 6 characters.</span>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="confirm-password">Confirm Password</label>
+            <div class="input-group">
+              <span class="input-icon-left"><i class="fa-solid fa-shield-check"></i></span>
+              <input type="password" id="confirm-password" class="form-control" placeholder="Re-enter your password" required autocomplete="new-password">
+              <button type="button" class="input-icon-right toggle-pwd" data-target="confirm-password" aria-label="Toggle password visibility">
+                <i class="fa-regular fa-eye"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group mb-3">
+            <label class="form-check">
+              <input type="checkbox" id="terms-agree" checked required>
+              <span>I agree to the Terms of Service & Privacy Policy</span>
+            </label>
+          </div>
+
+          <button type="submit" id="submit-btn" class="btn btn-primary w-100">
+            <span>Create Account</span>
+          </button>
+        </form>
+
+        <div class="auth-footer-nav">
+          Already have an account? <a href="login.html">Sign in here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- API Setting trigger -->
+  <button class="api-config-trigger" onclick="UI.showApiConfigModal()">
+    <i class="fa-solid fa-gear"></i> API Base URL
+  </button>
+
+  <script src="assets/js/config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      Auth.redirectIfAuthenticated();
+
+      // Password visibility togglers
+      document.querySelectorAll('.toggle-pwd').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const targetId = btn.getAttribute('data-target');
+          const input = document.getElementById(targetId);
+          const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+          input.setAttribute('type', type);
+          btn.innerHTML = type === 'password' 
+            ? '<i class="fa-regular fa-eye"></i>' 
+            : '<i class="fa-regular fa-eye-slash"></i>';
+        });
+      });
+
+      const form = document.getElementById('register-form');
+      const alertBox = document.getElementById('auth-alert');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alertBox.style.display = 'none';
+
+        const username = document.getElementById('username').value.trim();
+        const password = document.getElementById('password').value;
+        const confirmPassword = document.getElementById('confirm-password').value;
+        const termsAgree = document.getElementById('terms-agree').checked;
+
+        if (!username) {
+          alertBox.textContent = 'Please choose a username.';
+          alertBox.style.display = 'flex';
+          return;
+        }
+
+        if (password.length < 6) {
+          alertBox.textContent = 'Password must be at least 6 characters.';
+          alertBox.style.display = 'flex';
+          return;
+        }
+
+        if (password !== confirmPassword) {
+          alertBox.textContent = 'Passwords do not match.';
+          alertBox.style.display = 'flex';
+          return;
+        }
+
+        if (!termsAgree) {
+          alertBox.textContent = 'You must agree to the Terms of Service.';
+          alertBox.style.display = 'flex';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="spinner"></span> Creating account...';
+
+        try {
+          const res = await Auth.register(username, password);
+          sessionStorage.setItem('flash_success_message', 'Account registered successfully! Please log in.');
+          UI.showToast('Account created! Redirecting to login...', 'success');
+          setTimeout(() => {
+            window.location.href = 'login.html';
+          }, 900);
+        } catch (error) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>Create Account</span>';
+          alertBox.textContent = error.message;
+          alertBox.style.display = 'flex';
+          UI.showToast(error.message, 'error');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
+

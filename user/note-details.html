@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Note Details - NoteTrack</title>
+  <link rel="icon" type="image/svg+xml" href="../assets/images/logo.svg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="../assets/css/style.css">
+  <link rel="stylesheet" href="../assets/css/dashboard.css">
+  <link rel="stylesheet" href="../assets/css/responsive.css">
+  <style>
+    .note-detail-card {
+      max-width: 860px;
+      margin: 0 auto;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+    .note-detail-header {
+      padding: 2.25rem 2.25rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .note-detail-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 1rem;
+      line-height: 1.25;
+      word-break: break-word;
+    }
+    .note-meta-row {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .note-meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .note-detail-content {
+      padding: 2.25rem;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--text-secondary);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .note-detail-footer {
+      padding: 1.25rem 2.25rem;
+      background-color: var(--bg-body);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar">
+      <div class="sidebar-header">
+        <a href="dashboard.html" class="sidebar-brand">
+          <img src="../assets/images/logo.svg" alt="NoteTrack" width="28" height="28">
+          <span>NoteTrack</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Menu</div>
+        <a href="dashboard.html" class="nav-item">
+          <i class="fa-solid fa-chart-pie"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="notes.html" class="nav-item active">
+          <i class="fa-regular fa-note-sticky"></i>
+          <span>My Notes</span>
+        </a>
+        <a href="create-note.html" class="nav-item">
+          <i class="fa-solid fa-plus"></i>
+          <span>Create Note</span>
+        </a>
+
+        <div class="nav-section-title">Account</div>
+        <a href="profile.html" class="nav-item">
+          <i class="fa-regular fa-user"></i>
+          <span>My Profile</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-quick-profile">
+          <div class="user-avatar">U</div>
+          <div class="user-details-mini">
+            <div class="user-name-mini user-name-label">Loading...</div>
+            <div class="user-role-mini">
+              <span class="badge badge-primary user-role-badge">User</span>
+            </div>
+          </div>
+          <button class="action-btn btn-logout-trigger" title="Log Out" style="color: #ef4444;">
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Topbar Header -->
+      <header class="app-topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle-btn" aria-label="Toggle navigation">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          <div class="page-breadcrumb">
+            <a href="dashboard.html">Home</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <a href="notes.html">Notes</a>
+            <i class="fa-solid fa-chevron-right" style="font-size: 0.7rem;"></i>
+            <span>Details</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-action-btn theme-toggle-btn" onclick="UI.toggleTheme()" aria-label="Toggle theme">
+            <i class="fa-solid fa-moon"></i>
+          </button>
+
+          <!-- Profile Dropdown -->
+          <div class="profile-dropdown-wrapper">
+            <button class="profile-trigger" data-dropdown-target="user-dropdown-menu" aria-label="User menu">
+              <div class="user-avatar">U</div>
+              <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-muted);"></i>
+            </button>
+            <div class="dropdown-menu" id="user-dropdown-menu">
+              <div class="dropdown-header">
+                <div class="dropdown-user-name user-name-label">User</div>
+                <div class="dropdown-user-email user-email-label">user@example.com</div>
+              </div>
+              <a href="profile.html" class="dropdown-item">
+                <i class="fa-regular fa-user"></i> My Profile
+              </a>
+              <a href="notes.html" class="dropdown-item">
+                <i class="fa-regular fa-note-sticky"></i> My Notes
+              </a>
+              <button class="dropdown-item text-danger btn-logout-trigger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Note Details Content -->
+      <main class="page-content">
+        <div class="page-header-row" style="max-width: 860px; margin-left: auto; margin-right: auto;">
+          <a href="notes.html" class="btn btn-secondary">
+            <i class="fa-solid fa-arrow-left"></i> Back to Notes
+          </a>
+          <div class="d-flex align-center gap-2">
+            <button id="btn-edit" class="btn btn-secondary">
+              <i class="fa-solid fa-pen-to-square"></i> Edit Note
+            </button>
+            <button id="btn-delete" class="btn btn-outline-danger">
+              <i class="fa-regular fa-trash-can"></i> Delete
+            </button>
+          </div>
+        </div>
+
+        <div class="note-detail-card" id="detail-card">
+          <!-- Skeleton Loading State -->
+          <div id="loading-state" style="padding: 2.25rem;">
+            <div class="skeleton skeleton-title"></div>
+            <div class="skeleton skeleton-text" style="width: 40%; margin-bottom: 2rem;"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 80%;"></div>
+          </div>
+
+          <!-- Note Content View -->
+          <div id="content-state" style="display: none;">
+            <div class="note-detail-header">
+              <h1 class="note-detail-title" id="note-title-heading">Note Title</h1>
+              <div class="note-meta-row">
+                <div class="note-meta-item">
+                  <i class="fa-regular fa-calendar"></i>
+                  <span>Created: <strong id="note-created-date">--</strong></span>
+                </div>
+                <div class="note-meta-item">
+                  <i class="fa-regular fa-clock"></i>
+                  <span>Updated: <strong id="note-updated-date">--</strong></span>
+                </div>
+                <div class="note-meta-item">
+                  <i class="fa-solid fa-text-width"></i>
+                  <span id="note-stats-words">0 words</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="note-detail-content" id="note-description-body">
+              <!-- Full note content -->
+            </div>
+
+            <div class="note-detail-footer">
+              <div class="text-muted" style="font-size: 0.8rem;">
+                <i class="fa-regular fa-hashtag"></i> Note ID: <code id="note-id-code">--</code>
+              </div>
+              <div class="d-flex align-center gap-2">
+                <button class="btn btn-sm btn-secondary" onclick="navigator.clipboard.writeText(document.getElementById('note-description-body').textContent); UI.showToast('Note content copied to clipboard!', 'success');">
+                  <i class="fa-regular fa-copy"></i> Copy Content
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="../assets/js/config.js"></script>
+  <script src="../assets/js/api.js"></script>
+  <script src="../assets/js/ui.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/notes.js"></script>
+  <script>
+    let currentNote = null;
+
+    async function loadNoteDetails() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const noteId = urlParams.get('id');
+
+      if (!noteId) {
+        UI.showToast('No note ID specified in URL.', 'error');
+        setTimeout(() => window.location.href = 'notes.html', 1200);
+        return;
+      }
+
+      try {
+        currentNote = await Notes.getNoteById(noteId);
+        renderNote(currentNote);
+      } catch (err) {
+        UI.showToast(err.message, 'error', 'Note Not Found');
+        setTimeout(() => window.location.href = 'notes.html', 1500);
+      }
+    }
+
+    function renderNote(note) {
+      document.getElementById('loading-state').style.display = 'none';
+      document.getElementById('content-state').style.display = 'block';
+
+      document.getElementById('note-title-heading').textContent = note.title;
+      document.getElementById('note-created-date').textContent = UI.formatDate(note.created_at);
+      document.getElementById('note-updated-date').textContent = UI.timeAgo(note.updated_at || note.created_at);
+      document.getElementById('note-id-code').textContent = note.id;
+
+      const desc = note.description || '';
+      document.getElementById('note-description-body').textContent = desc;
+
+      const words = desc.trim() ? desc.trim().split(/\s+/).length : 0;
+      document.getElementById('note-stats-words').textContent = `${words} words (${desc.length} chars)`;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!Auth.requireAuth()) return;
+
+      loadNoteDetails();
+
+      // Edit Button
+      document.getElementById('btn-edit').addEventListener('click', () => {
+        if (!currentNote) return;
+        Notes.openEditModal(currentNote, () => {
+          loadNoteDetails();
+        });
+      });
+
+      // Delete Button
+      document.getElementById('btn-delete').addEventListener('click', () => {
+        if (!currentNote) return;
+        Notes.confirmDelete(currentNote.id, currentNote.title, () => {
+          window.location.href = 'notes.html';
+        });
+      });
+    });
+  </script>
+</body>
+</html>
+
